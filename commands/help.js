@@ -47,6 +47,7 @@ ${commands.join('\n')}
 ╰─━━━━━━━━━╾─╯
 Chat -help [name] 
 to see command details.
+Created By : www.facebook.com/Jaycantfinddd
 ━━━━━━━━━━━━━━`;
 
     sendMessage(senderId, { text: helpMessage }, pageAccessToken);

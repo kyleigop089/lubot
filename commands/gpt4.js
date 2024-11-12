@@ -1,21 +1,28 @@
 const axios = require('axios');
 const { sendMessage } = require('../handles/sendMessage');
+const fs = require('fs');
+
+const token = fs.readFileSync('token.txt', 'utf8');
 
 module.exports = {
-  name: 'gpt4',
-  description: 'Interact with GPT-4o',
-  usage: 'gpt4 [your message]',
-  author: 'coffee',
+  name: 'ai',
+  description: 'Allow's you to chat the ai',
+  author: 'Jay Ar',
 
-  async execute(senderId, args, pageAccessToken) {
-    const prompt = args.join(' ');
-    if (!prompt) return sendMessage(senderId, { text: "Usage: gpt4 <question>" }, pageAccessToken);
+  async execute(senderId, args) {
+    const pageAccessToken = token;
+    const input = (args.join(' ') || 'hi').trim();
+    const modifiedPrompt = `${input}, direct answer.`;
 
     try {
-      const { data: { result } } = await axios.get(`https://joshweb.click/api/gpt-4o?q=${encodeURIComponent(prompt)}&uid=${senderId}`);
-      sendMessage(senderId, { text: result }, pageAccessToken);
-    } catch {
-      sendMessage(senderId, { text: 'There was an error generating the content. Please try again later.' }, pageAccessToken);
+      const response = await axios.get(`https://example-api.com/api?query=${encodeURIComponent(modifiedPrompt)}`);
+      const data = response.data;
+      const formattedMessage = `JayChat\n・───────────・\n${data.response || 'This is an example response.'}\n・──── >ᴗ< ────・\n Creator : www.facebook.com/JayCantFinddd `;
+
+      await sendMessage(senderId, { text: formattedMessage }, pageAccessToken);
+    } catch (error) {
+      console.error('Error:', error);
+      await sendMessage(senderId, { text: 'Error: Unexpected error.' }, pageAccessToken);
     }
   }
 };
